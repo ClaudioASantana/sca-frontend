@@ -1,0 +1,10 @@
+<nav class="breadcrumbs" *ngIf="crumbs.length">
+  <a routerLink="/dashboard" class="home">
+    <mat-icon>home</mat-icon>
+  </a>
+  <span class="sep">/</span>
+  <ng-container *ngFor="let c of crumbs; let last = last">
+    <a [routerLink]="c.url" [class.last]="last">{{ c.label }}</a>
+    <span class="sep" *ngIf="!last">/</span>
+  </ng-container>
+</nav>

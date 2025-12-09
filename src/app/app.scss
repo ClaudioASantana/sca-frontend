@@ -1,0 +1,172 @@
+:host {
+  display: block;
+  height: 100vh;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 260px;
+  overflow: auto;
+}
+
+.sidenav.collapsed {
+  width: 72px;
+}
+.sidenav.collapsed .sidenav-header {
+  justify-content: center;
+}
+.sidenav.collapsed .menu-group .mat-expansion-panel-header {
+  padding: 0;
+  justify-content: center;
+}
+.sidenav.collapsed .menu-group .mat-expansion-panel-body {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.sidenav.collapsed a[mat-list-item] {
+  justify-content: center;
+  padding: 0;
+}
+.sidenav.collapsed a[mat-list-item] .mat-mdc-list-item-icon {
+  margin-right: 0;
+}
+.sidenav.collapsed a[mat-list-item] [matLine] {
+  display: none;
+}
+
+.sidenav-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  font-weight: 600;
+}
+
+.topbar .title {
+  margin-left: 8px;
+}
+
+.avatar-initials {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.12);
+  color: inherit;
+  font-weight: 600;
+}
+
+.mat-toolbar.mat-primary .avatar-initials {
+  background: rgba(255, 255, 255, 0.24);
+  color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+.menu-group .panel-icon {
+  margin-right: 8px;
+}
+
+.menu-group {
+  /* manter estilo padrão do Material */
+}
+.menu-group .mat-expansion-panel-header {
+  padding: 0 16px;
+}
+.menu-group .mat-expansion-panel-header .mat-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.menu-group .mat-expansion-panel-content,
+.menu-group .mat-expansion-panel-body {
+  padding: 0;
+  overflow: visible;
+}
+.menu-group a[mat-list-item] {
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 16px;
+}
+
+.content {
+  padding: 16px;
+}
+
+.mat-mdc-form-field {
+  --mat-form-field-container-height: 30px;
+  --mat-form-field-container-vertical-padding: 4px;
+}
+
+.mat-mdc-table .mdc-data-table__header-row,
+.mat-mdc-table .mdc-data-table__row,
+.mat-mdc-header-row,
+.mat-mdc-row {
+  height: 32px;
+}
+
+.mat-mdc-cell,
+.mat-mdc-header-cell {
+  padding: 4px 10px;
+}
+
+a[mat-list-item].active {
+  background-color: rgba(0,0,0,0.06);
+}
+.sidenav.collapsed {
+  width: 72px;
+}
+
+.sidenav.collapsed .sidenav-header {
+  justify-content: center;
+}
+
+.sidenav.collapsed .menu-group .mat-expansion-panel-header .mat-panel-title {
+  justify-content: center;
+}
+
+.sidenav.collapsed .menu-group a[mat-list-item] {
+  justify-content: center;
+}
+.mat-mdc-card-title {
+  margin-bottom: 6px;
+}
+.mat-mdc-card-content {
+  padding: 12px;
+}
+.mat-mdc-card-actions {
+  padding: 8px 12px;
+}
+
+.mat-mdc-dialog-title {
+  padding: 12px 16px;
+}
+.mat-mdc-dialog-content {
+  padding: 8px 16px;
+}
+.mat-mdc-dialog-actions {
+  padding: 8px 16px;
+}
+
+.auth-loading-overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(2px);
+  z-index: 1000;
+}
+.auth-loading-overlay.auth {
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(3px);
+}

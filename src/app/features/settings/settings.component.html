@@ -1,0 +1,16 @@
+<mat-card>
+  <mat-card-title>Configurações</mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="save()" style="display:grid; grid-template-columns: 1fr 160px; gap: 12px; align-items: end;">
+      <mat-form-field appearance="outline">
+        <mat-label>Delay do overlay (ms)</mat-label>
+        <input matInput type="number" formControlName="overlayDelay" placeholder="Ex.: 250" />
+        <mat-hint align="start">Valor entre 0 e 5000 ms</mat-hint>
+        <mat-error *ngIf="form.controls['overlayDelay'].touched && form.controls['overlayDelay'].hasError('required')">Obrigatório</mat-error>
+        <mat-error *ngIf="form.controls['overlayDelay'].touched && form.controls['overlayDelay'].hasError('min')">Mínimo 0</mat-error>
+        <mat-error *ngIf="form.controls['overlayDelay'].touched && form.controls['overlayDelay'].hasError('max')">Máximo 5000</mat-error>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || saving">{{ saving ? 'Salvando...' : 'Salvar' }}</button>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,88 @@
+<ng-container *ngIf="!loginView()">
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav class="sidenav" [opened]="sidenavOpen()" mode="side" [class.collapsed]="collapsed()">
+    <div class="sidenav-header">
+      <mat-icon>verified_user</mat-icon>
+      <span *ngIf="!collapsed()">NextAdmin</span>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <mat-nav-list>
+      <a mat-list-item routerLink="/dashboard" routerLinkActive="active" [matTooltip]="'Dashboard'" [matTooltipDisabled]="!collapsed()" matTooltipPosition="right">
+        <mat-icon matListIcon>dashboard</mat-icon>
+        <span matLine *ngIf="!collapsed()">Dashboard</span>
+      </a>
+
+      <mat-expansion-panel class="menu-group" hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon class="panel-icon">admin_panel_settings</mat-icon>
+            <span *ngIf="!collapsed()">Administração</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <a mat-list-item routerLink="/users" routerLinkActive="active" [matTooltip]="'Usuários'" [matTooltipDisabled]="!collapsed()" matTooltipPosition="right">
+          <mat-icon matListIcon>group</mat-icon>
+          <span matLine *ngIf="!collapsed()">Usuários</span>
+        </a>
+        <a mat-list-item routerLink="/roles" routerLinkActive="active" [matTooltip]="'Papéis'" [matTooltipDisabled]="!collapsed()" matTooltipPosition="right">
+          <mat-icon matListIcon>security</mat-icon>
+          <span matLine *ngIf="!collapsed()">Papéis</span>
+        </a>
+        <a mat-list-item routerLink="/permissions" routerLinkActive="active" [matTooltip]="'Permissões'" [matTooltipDisabled]="!collapsed()" matTooltipPosition="right">
+          <mat-icon matListIcon>vpn_key</mat-icon>
+          <span matLine *ngIf="!collapsed()">Permissões</span>
+        </a>
+      </mat-expansion-panel>
+
+      <a mat-list-item routerLink="/settings" routerLinkActive="active" [matTooltip]="'Configurações'" [matTooltipDisabled]="!collapsed()" matTooltipPosition="right">
+        <mat-icon matListIcon>settings</mat-icon>
+        <span matLine *ngIf="!collapsed()">Configurações</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" class="topbar">
+      <button mat-icon-button (click)="sidenavOpen.set(!sidenavOpen())" aria-label="Toggle menu">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="title">Controle de Acesso</span>
+      <span class="spacer"></span>
+      <button mat-icon-button (click)="toggleCollapsed()" [matTooltip]="collapsed() ? 'Expandir' : 'Colapsar'" matTooltipPosition="below" aria-label="Toggle collapse">
+        <mat-icon>{{ collapsed() ? 'chevron_right' : 'chevron_left' }}</mat-icon>
+      </button>
+      <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Usuário">
+        <span class="avatar-initials">{{ initials() }}</span>
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item disabled>
+          <mat-icon>person</mat-icon>
+          <span>{{ auth.user?.name || 'Usuário' }}</span>
+        </button>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Sair</span>
+        </button>
+      </mat-menu>
+    </mat-toolbar>
+    <sca-breadcrumbs></sca-breadcrumbs>
+
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+</ng-container>
+
+<ng-container *ngIf="loginView()">
+  <router-outlet></router-outlet>
+</ng-container>
+
+<div class="auth-loading-overlay" *ngIf="loading.isLoading()" [class.auth]="loading.kind() === 'auth'">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:12px;color:#fff">
+    <mat-icon style="font-size: 40px;">{{ loading.kind() === 'auth' ? 'lock' : 'hourglass_top' }}</mat-icon>
+    <mat-progress-spinner diameter="48" mode="indeterminate"></mat-progress-spinner>
+    <div>{{ loading.message() || 'Carregando...' }}</div>
+  </div>
+</div>
