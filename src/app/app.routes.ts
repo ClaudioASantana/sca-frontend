@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+npm startimport { Routes } from '@angular/router';
 import { adminGuard } from './core/auth/admin.guard';
 import { authGuard } from './core/auth/auth.guard';
 import { guestGuard } from './core/auth/guest.guard';
