@@ -1,7 +1,128 @@
-table {
+.section-box {
+  background: rgba(0,0,0,0.035);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.page-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  min-height: 56px;
+}
+.page-header .title {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.page-header .title .title-text {
+  display: flex;
+  flex-direction: column;
+}
+.page-header .title h2 {
+  margin: 0;
+}
+.page-header .title mat-icon {
+  font-size: 28px;
+  line-height: 1;
+  margin-top: 2px;
+}
+.page-header .title .subtitle {
+  font-size: 13px;
+  color: rgba(0,0,0,0.6);
+}
+.page-header .tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.page-header .tools .search {
+  flex: 1;
+  min-width: 240px;
+}
+
+.section-divider {
+  margin: 8px 0 12px;
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+}
+.search-row .search {
   width: 100%;
 }
 
-mat-card-title {
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+
+.list-info {
+  font-size: 13px;
+  color: rgba(0,0,0,0.6);
   margin-bottom: 8px;
+}
+
+mat-paginator {
+  margin-top: 8px;
+}
+
+.card-item .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.08);
+  font-weight: 600;
+}
+
+.card-item .meta {
+  display: flex;
+  gap: 8px;
+}
+.card-item .tag {
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.06);
+  font-size: 12px;
+}
+
+.tag-admin { background: rgba(244, 67, 54, 0.14); color: #c62828; }
+.tag-manager { background: rgba(33, 150, 243, 0.14); color: #1565c0; }
+.tag-user { background: rgba(158, 158, 158, 0.18); color: #424242; }
+.tag-active { background: rgba(76, 175, 80, 0.16); color: #2e7d32; }
+.tag-pending { background: rgba(255, 193, 7, 0.18); color: #8f6b00; }
+.tag-inactive { background: rgba(96, 125, 139, 0.16); color: #37474f; }
+
+.card-item .actions {
+  padding: 8px 12px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+.card-item .actions button {
+  transition: transform 0.12s ease;
+}
+.card-item .actions button:hover {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 720px) {
+  .page-header {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .page-header .tools {
+    flex-wrap: wrap;
+  }
+  .page-header .tools .search {
+    min-width: 0;
+    width: 100%;
+  }
 }

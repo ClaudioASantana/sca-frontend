@@ -50,7 +50,7 @@ export class LoginComponent {
         this.loading = false;
         this.errorMsg = null;
         this.snack.open('Login realizado', 'Fechar', { duration: 2000 });
-        this.router.navigate(['/dashboard'], { replaceUrl: true });
+        this.router.navigate(['/home'], { replaceUrl: true });
       },
       error: (err) => {
         this.loading = false;

@@ -1,4 +1,4 @@
-npm startimport { Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { adminGuard } from './core/auth/admin.guard';
 import { authGuard } from './core/auth/auth.guard';
 import { guestGuard } from './core/auth/guest.guard';
@@ -7,7 +7,13 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'dashboard'
+    redirectTo: 'home'
+  },
+  {
+    path: 'home',
+    loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent),
+    canMatch: [authGuard],
+    data: { breadcrumb: 'Home' }
   },
   {
     path: 'login',

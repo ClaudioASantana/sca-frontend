@@ -1,7 +1,7 @@
 # Histórico de alterações (SCA - Frontend)
 
 ## Últimas mudanças
-- Atualizado em 2025-12-01 03:01:35
+- Atualizado em 2025-12-10 23:22:22
 - src/app/features/settings/settings.component.ts (modificado: 2025-12-01 02:22:06)
 - src/app/features/settings/settings.component.html (modificado: 2025-12-01 02:22:06)
 - src/app/features/auth/login.component.html (modificado: 2025-12-01 02:22:05)
@@ -15,13 +15,21 @@
 
 
 ### Commits recentes
-- 6e507f6 feat(auth): add loading overlay and improve error handling (mcmoriam, 2025-11-30 20:24:24 -0300)
-- e6173d3 feat(auth): implement authentication system with guards and interceptor (mcmoriam, 2025-11-30 17:55:42 -0300)
-- 79a93fe feat: initialize angular project with basic admin dashboard structure (mcmoriam, 2025-11-28 22:23:46 -0300)
-- cff2079 Added README.md, .gitignore (Node) files (Claudio Amorim de Santana, 2025-11-29 00:22:01 +0000)
+- aafeedb chore: update VS workspace and configuration files (Claudio Amorim, 2025-12-09 21:08:35 -0300)
+- d28cd01 Configuração inicial do projeto Angular (Claudio Amorim, 2025-12-09 20:45:01 -0300)
+- 019a5d6 Initial commit (CLAUDIO AMORIM DE SANTANA, 2025-12-01 23:17:18 -0300)
 
 ### Conversas recentes
 # Conversas e respostas (SCA - Frontend)
+
+## Registro
+- Copie aqui trechos relevantes das conversas e respostas para consulta futura.
+- Linhas mais recentes serão mostradas em “Conversas recentes” dentro do HISTORICO.md.
+- Para limitar quantas linhas entram no resumo, defina `HISTORY_CHAT_LINES_LIMIT`.
+
+## Último resumo
+- Este arquivo é apenas um repositório de conversa; edite livremente.
+
 
 ## Registro
 - Copie aqui trechos relevantes das conversas e respostas para consulta futura.
