@@ -1,75 +1,58 @@
-<mat-card>
-  <mat-card-title>Usuários</mat-card-title>
-  <mat-card-content>
-    <ng-template #confirmDialog>
-      <h2 mat-dialog-title>Confirmar</h2>
-      <mat-dialog-content>Confirmar criação do usuário?</mat-dialog-content>
-      <mat-dialog-actions align="end">
-        <button mat-button mat-dialog-close="false">Cancelar</button>
-        <button mat-raised-button color="primary" mat-dialog-close="true">Confirmar</button>
-      </mat-dialog-actions>
-    </ng-template>
+<div class="section-box">
+  <div class="page-header">
+    <div class="title">
+      <mat-icon>group</mat-icon>
+      <div class="title-text">
+        <h2>Gestão de Usuários</h2>
+        <div class="subtitle">Todos os usuários cadastrados no sistema</div>
+      </div>
+    </div>
+    <div class="tools">
+      <button mat-raised-button color="primary" (click)="newUser()">Novo Usuário</button>
+    </div>
+  </div>
 
-    <form [formGroup]="form" (ngSubmit)="create()" style="display: grid; grid-template-columns: 1fr 1fr 120px; gap: 12px; margin-bottom: 16px;">
-      <mat-form-field appearance="outline">
-        <mat-label>Nome</mat-label>
-        <input matInput formControlName="name" placeholder="Nome" />
-        <mat-hint align="start">Mínimo de 2 caracteres</mat-hint>
-        <mat-error *ngIf="form.controls['name'].touched && form.controls['name'].hasError('required')">Nome é obrigatório</mat-error>
-        <mat-error *ngIf="form.controls['name'].touched && form.controls['name'].hasError('minlength')">Mínimo de 2 caracteres</mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>E-mail</mat-label>
-        <input matInput type="email" formControlName="email" placeholder="E-mail" />
-        <mat-hint align="start">Informe um e-mail válido</mat-hint>
-        <mat-error *ngIf="form.controls['email'].touched && form.controls['email'].hasError('required')">E-mail é obrigatório</mat-error>
-        <mat-error *ngIf="form.controls['email'].touched && form.controls['email'].hasError('email')">E-mail inválido</mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Idade</mat-label>
-        <input matInput type="number" formControlName="age" />
-        <mat-hint align="start">Faixa permitida: 18 a 120</mat-hint>
-        <mat-error *ngIf="form.controls['age'].touched && form.controls['age'].hasError('required')">Idade é obrigatória</mat-error>
-        <mat-error *ngIf="form.controls['age'].touched && form.controls['age'].hasError('min')">Mínimo 18 anos</mat-error>
-        <mat-error *ngIf="form.controls['age'].touched && form.controls['age'].hasError('max')">Máximo 120 anos</mat-error>
-      </mat-form-field>
-      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || loading">{{ loading ? 'Adicionando...' : 'Adicionar' }}</button>
-    </form>
-    <mat-form-field appearance="outline" style="width: 100%; margin-bottom: 12px;">
-      <mat-label>Filtrar</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Digite para filtrar" />
+  <mat-divider class="section-divider"></mat-divider>
+
+  <div class="search-row">
+    <mat-form-field appearance="outline" class="search">
+      <mat-label>Buscar usuários</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput (input)="applyFilter($event)" placeholder="Digite para buscar usuários" />
     </mat-form-field>
+  </div>
+</div>
 
-    <table mat-table [dataSource]="dataSource" matSort>
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-        <td mat-cell *matCellDef="let row">{{ row.id }}</td>
-      </ng-container>
+<div class="list-info">mostrado {{ shownCount() }} de {{ totalCount() }}</div>
 
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
-        <td mat-cell *matCellDef="let row">{{ row.name }}</td>
-      </ng-container>
+<div class="cards">
+  <mat-card class="card-item mat-elevation-z2" *ngFor="let u of users">
+    <mat-card-header>
+      <div mat-card-avatar class="avatar">{{ (u.name || '?').slice(0,1).toUpperCase() }}</div>
+      <mat-card-title>{{ u.name }}</mat-card-title>
+      <mat-card-subtitle>{{ u.email }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="meta">
+        <span class="tag" [ngClass]="roleClass(u.role)" *ngIf="u.role">{{ u.role }}</span>
+        <span class="tag" [ngClass]="statusClass(u.status)" *ngIf="u.status">{{ u.status }}</span>
+      </div>
+    </mat-card-content>
+    <mat-card-actions align="end" class="actions">
+      <button mat-icon-button matTooltip="Visualizar" (click)="view(u)"><mat-icon>visibility</mat-icon></button>
+      <button mat-icon-button matTooltip="Editar" (click)="edit(u)"><mat-icon>edit</mat-icon></button>
+      <button mat-icon-button color="warn" matTooltip="Excluir" (click)="remove(u)"><mat-icon>delete</mat-icon></button>
+    </mat-card-actions>
+  </mat-card>
+</div>
 
-      <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>E-mail</th>
-        <td mat-cell *matCellDef="let row">{{ row.email }}</td>
-      </ng-container>
+<mat-paginator [length]="totalCount()" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[6, 12, 24, 48]" (page)="onPage($event)"></mat-paginator>
 
-      <ng-container matColumnDef="role">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Papel</th>
-        <td mat-cell *matCellDef="let row">{{ row.role }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-        <td mat-cell *matCellDef="let row">{{ row.status }}</td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
-
-    <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
-  </mat-card-content>
-</mat-card>
+<ng-template #confirmDialog>
+  <h2 mat-dialog-title>Confirmar</h2>
+  <mat-dialog-content>Confirmar exclusão?</mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close="false">Cancelar</button>
+    <button mat-raised-button color="primary" mat-dialog-close="true">Confirmar</button>
+  </mat-dialog-actions>
+</ng-template>

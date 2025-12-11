@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -11,18 +11,39 @@ export type User = {
   status?: 'active' | 'inactive' | 'pending';
 };
 
+export type UsersPage = {
+  items: User[];
+  total: number;
+  page: number;
+  size: number;
+};
+
 @Injectable({ providedIn: 'root' })
 export class UsersService {
   constructor(private http: HttpClient) {}
 
-  getUsers(): Observable<User[]> {
-    return this.http.get<any[]>('/api/v1/users').pipe(
-      map((items) => items.map((it) => ({
-        id: it.id ?? it.userId ?? it.uuid ?? it._id,
-        name: it.name ?? it.nome ?? 'Sem nome',
-        email: it.email ?? 'sem-email@example.com'
-      }) as User)),
-      catchError(() => of([]))
+  getUsers(params?: { page?: number; size?: number; q?: string }): Observable<UsersPage> {
+    const p = new HttpParams({ fromObject: {
+      page: String(params?.page ?? 1),
+      size: String(params?.size ?? 12),
+      q: params?.q ?? ''
+    }});
+    return this.http.get<any>('/api/v1/users', { params: p }).pipe(
+      map((res) => {
+        const rawItems = Array.isArray(res) ? res : (res?.items ?? res?.data?.items ?? res?.data ?? res?.results ?? []);
+        const total = (res?.total ?? res?.count ?? res?.data?.total ?? rawItems?.length ?? 0);
+        const page = Number(res?.page ?? res?.data?.page ?? params?.page ?? 1);
+        const size = Number(res?.size ?? res?.data?.size ?? params?.size ?? 12);
+        const items: User[] = (rawItems || []).map((it: any) => ({
+          id: it.id ?? it.userId ?? it.uuid ?? it._id,
+          name: it.name ?? it.nome ?? 'Sem nome',
+          email: it.email ?? 'sem-email@example.com',
+          role: it.role ?? it.papel ?? it.roleName ?? undefined,
+          status: it.status ?? it.situacao ?? undefined
+        }));
+        return { items, total, page, size } as UsersPage;
+      }),
+      catchError(() => of({ items: [], total: 0, page: Number(params?.page ?? 1), size: Number(params?.size ?? 12) }))
     );
   }
 
