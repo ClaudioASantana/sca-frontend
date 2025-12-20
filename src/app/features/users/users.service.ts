@@ -20,20 +20,23 @@ export type UsersPage = {
 
 @Injectable({ providedIn: 'root' })
 export class UsersService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getUsers(params?: { page?: number; size?: number; q?: string }): Observable<UsersPage> {
-    const p = new HttpParams({ fromObject: {
-      page: String(params?.page ?? 1),
-      size: String(params?.size ?? 12),
-      q: params?.q ?? ''
-    }});
+    const p = new HttpParams({
+      fromObject: {
+        page: String(params?.page ?? 1),
+        limit: String(params?.size ?? 12),
+        q: params?.q ?? ''
+      }
+    });
     return this.http.get<any>('/api/v1/users', { params: p }).pipe(
       map((res) => {
-        const rawItems = Array.isArray(res) ? res : (res?.items ?? res?.data?.items ?? res?.data ?? res?.results ?? []);
-        const total = (res?.total ?? res?.count ?? res?.data?.total ?? rawItems?.length ?? 0);
-        const page = Number(res?.page ?? res?.data?.page ?? params?.page ?? 1);
-        const size = Number(res?.size ?? res?.data?.size ?? params?.size ?? 12);
+        const rawItems = Array.isArray(res) ? res : (res?.data ?? res?.items ?? res?.results ?? []);
+        const total = (res?.meta?.total ?? res?.total ?? res?.count ?? rawItems?.length ?? 0);
+        const page = Number(res?.meta?.page ?? res?.page ?? params?.page ?? 1);
+        const size = Number(res?.meta?.limit ?? res?.size ?? res?.limit ?? params?.size ?? 12);
+
         const items: User[] = (rawItems || []).map((it: any) => ({
           id: it.id ?? it.userId ?? it.uuid ?? it._id,
           name: it.name ?? it.nome ?? 'Sem nome',

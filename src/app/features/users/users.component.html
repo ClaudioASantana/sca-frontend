@@ -1,52 +1,148 @@
-<div class="section-box">
-  <div class="page-header">
-    <div class="title">
-      <mat-icon>group</mat-icon>
-      <div class="title-text">
-        <h2>Gestão de Usuários</h2>
-        <div class="subtitle">Todos os usuários cadastrados no sistema</div>
-      </div>
-    </div>
-    <div class="tools">
-      <button mat-raised-button color="primary" (click)="newUser()">Novo Usuário</button>
+<!-- Page Header -->
+<div class="page-header">
+  <div class="header-left">
+    <div class="title-section">
+      <h1 class="page-title">Gestão de Usuários</h1>
+      <p class="page-subtitle">{{ total }} usuários cadastrados no sistema</p>
     </div>
   </div>
-
-  <mat-divider class="section-divider"></mat-divider>
-
-  <div class="search-row">
-    <mat-form-field appearance="outline" class="search">
-      <mat-label>Buscar usuários</mat-label>
+  <div class="header-right">
+    <mat-form-field appearance="outline" class="search-field">
       <mat-icon matPrefix>search</mat-icon>
-      <input matInput (input)="applyFilter($event)" placeholder="Digite para buscar usuários" />
+      <input matInput (input)="applyFilter($event)" placeholder="Buscar usuários..." />
     </mat-form-field>
+    <button mat-raised-button color="primary" (click)="newUser()">
+      <mat-icon>add</mat-icon>
+      Novo Usuário
+    </button>
   </div>
 </div>
 
-<div class="list-info">mostrado {{ shownCount() }} de {{ totalCount() }}</div>
-
-<div class="cards">
-  <mat-card class="card-item mat-elevation-z2" *ngFor="let u of users">
-    <mat-card-header>
-      <div mat-card-avatar class="avatar">{{ (u.name || '?').slice(0,1).toUpperCase() }}</div>
-      <mat-card-title>{{ u.name }}</mat-card-title>
-      <mat-card-subtitle>{{ u.email }}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="meta">
-        <span class="tag" [ngClass]="roleClass(u.role)" *ngIf="u.role">{{ u.role }}</span>
-        <span class="tag" [ngClass]="statusClass(u.status)" *ngIf="u.status">{{ u.status }}</span>
-      </div>
-    </mat-card-content>
-    <mat-card-actions align="end" class="actions">
-      <button mat-icon-button matTooltip="Visualizar" (click)="view(u)"><mat-icon>visibility</mat-icon></button>
-      <button mat-icon-button matTooltip="Editar" (click)="edit(u)"><mat-icon>edit</mat-icon></button>
-      <button mat-icon-button color="warn" matTooltip="Excluir" (click)="remove(u)"><mat-icon>delete</mat-icon></button>
-    </mat-card-actions>
-  </mat-card>
+<!-- Statistics Cards -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon total">
+      <mat-icon>group</mat-icon>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value">{{ statsTotal }}</div>
+      <div class="stat-label">Total de Usuários</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon active">
+      <mat-icon>check_circle</mat-icon>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value">{{ statsActive }}</div>
+      <div class="stat-label">Ativos</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon pending">
+      <mat-icon>schedule</mat-icon>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value">{{ statsPending }}</div>
+      <div class="stat-label">Pendentes</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon inactive">
+      <mat-icon>block</mat-icon>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value">{{ statsInactive }}</div>
+      <div class="stat-label">Inativos</div>
+    </div>
+  </div>
 </div>
 
-<mat-paginator [length]="totalCount()" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[6, 12, 24, 48]" (page)="onPage($event)"></mat-paginator>
+<!-- Quick Filters -->
+<div class="filters-row">
+  <div class="filters-label">Filtrar por status:</div>
+  <div class="filter-chips">
+    <button mat-stroked-button [class.active]="selectedFilter === 'all'" (click)="setFilter('all')">
+      Todos
+    </button>
+    <button mat-stroked-button [class.active]="selectedFilter === 'active'" (click)="setFilter('active')">
+      Ativos
+    </button>
+    <button mat-stroked-button [class.active]="selectedFilter === 'pending'" (click)="setFilter('pending')">
+      Pendentes
+    </button>
+    <button mat-stroked-button [class.active]="selectedFilter === 'inactive'" (click)="setFilter('inactive')">
+      Inativos
+    </button>
+  </div>
+</div>
+
+<div class="table-container">
+  <table mat-table [dataSource]="users">
+
+    <!-- User Info Column (Avatar + Name + Email) -->
+    <ng-container matColumnDef="user">
+      <th mat-header-cell *matHeaderCellDef>USUÁRIO</th>
+      <td mat-cell *matCellDef="let u">
+        <div class="user-cell">
+          <div class="avatar-sm" [style.background]="getAvatarColor(u.name)">
+            {{ (u.name || '?').slice(0,1).toUpperCase() }}
+          </div>
+          <div class="user-info">
+            <div class="user-name">{{ u.name }}</div>
+            <div class="user-email">{{ u.email }}</div>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Role Column -->
+    <ng-container matColumnDef="role">
+      <th mat-header-cell *matHeaderCellDef>FUNÇÃO</th>
+      <td mat-cell *matCellDef="let u">
+        <span class="tag" [ngClass]="roleClass(u.role)" *ngIf="u.role">{{ u.role }}</span>
+      </td>
+    </ng-container>
+
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>STATUS</th>
+      <td mat-cell *matCellDef="let u">
+        <span class="tag" [ngClass]="statusClass(u.status)" *ngIf="u.status">{{ u.status }}</span>
+      </td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let u">
+        <button mat-icon-button [matMenuTriggerFor]="actionMenu" aria-label="Ações">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #actionMenu="matMenu">
+          <button mat-menu-item (click)="view(u)">
+            <mat-icon>visibility</mat-icon>
+            <span>Visualizar</span>
+          </button>
+          <button mat-menu-item (click)="edit(u)">
+            <mat-icon>edit</mat-icon>
+            <span>Editar</span>
+          </button>
+          <button mat-menu-item (click)="remove(u)">
+            <mat-icon color="warn">delete</mat-icon>
+            <span>Excluir</span>
+          </button>
+        </mat-menu>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+
+<mat-paginator [length]="totalCount()" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[6, 12, 24, 48]"
+  (page)="onPage($event)"></mat-paginator>
 
 <ng-template #confirmDialog>
   <h2 mat-dialog-title>Confirmar</h2>

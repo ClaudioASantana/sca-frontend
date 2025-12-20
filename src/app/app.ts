@@ -14,7 +14,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { BreadcrumbsComponent } from './shared/breadcrumbs/breadcrumbs.component';
 
 @Component({
   selector: 'sca-root',
@@ -31,9 +30,8 @@ import { BreadcrumbsComponent } from './shared/breadcrumbs/breadcrumbs.component
     MatDividerModule,
     MatExpansionModule,
     MatTooltipModule,
-    MatMenuModule
-    ,MatProgressSpinnerModule
-    ,BreadcrumbsComponent
+    MatMenuModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
@@ -43,6 +41,7 @@ export class App {
   protected readonly sidenavOpen = signal(true);
   protected readonly collapsed = signal(false);
   protected readonly loginView = signal(false);
+  protected readonly administracaoOpen = signal(false);
 
   protected readonly menu = [
     { label: 'Dashboard', icon: 'dashboard', path: 'dashboard' },
@@ -57,13 +56,13 @@ export class App {
     { label: 'Configurações', icon: 'settings', path: 'settings' }
   ];
 
-  constructor(private router: Router, protected auth: AuthService, protected loading: LoadingService) {}
+  constructor(private router: Router, protected auth: AuthService, protected loading: LoadingService) { }
 
   ngOnInit() {
     try {
       const saved = localStorage.getItem('menu-collapsed');
       if (saved === 'true') this.collapsed.set(true);
-    } catch {}
+    } catch { }
 
     this.loginView.set(this.router.url.startsWith('/login'));
     this.router.events.subscribe((e) => {
@@ -78,7 +77,11 @@ export class App {
     this.collapsed.set(next);
     try {
       localStorage.setItem('menu-collapsed', String(next));
-    } catch {}
+    } catch { }
+  }
+
+  toggleAdministracao() {
+    this.administracaoOpen.set(!this.administracaoOpen());
   }
 
   logout() {

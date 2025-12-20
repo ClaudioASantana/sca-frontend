@@ -13,6 +13,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'sca-users',
@@ -28,7 +30,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatIconModule,
     MatTooltipModule,
     MatDividerModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatTableModule,
+    MatMenuModule
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
@@ -38,14 +42,16 @@ export class UsersComponent {
   private fb = inject(FormBuilder);
   private snack = inject(MatSnackBar);
   private dialog = inject(MatDialog);
+  displayedColumns: string[] = ['user', 'role', 'status', 'actions'];
   users: User[] = [];
   total = 0;
   pageSize = 12;
   pageIndex = 0;
   query = '';
+  selectedFilter: 'all' | 'active' | 'pending' | 'inactive' = 'all';
   form = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
-    email: ['', [Validators.required, Validators.email]] ,
+    email: ['', [Validators.required, Validators.email]],
     age: [18, [Validators.required, Validators.min(18), Validators.max(120)]]
   });
   loading = false;
@@ -61,6 +67,17 @@ export class UsersComponent {
     this.pageIndex = 0;
     this.refresh();
   }
+
+  setFilter(filter: 'all' | 'active' | 'pending' | 'inactive') {
+    this.selectedFilter = filter;
+    this.pageIndex = 0;
+    this.refresh();
+  }
+
+  get statsTotal() { return this.total; }
+  get statsActive() { return this.users.filter(u => u.status?.toLowerCase() === 'active' || u.status?.toLowerCase() === 'ativo').length; }
+  get statsPending() { return this.users.filter(u => u.status?.toLowerCase() === 'pending' || u.status?.toLowerCase() === 'pendente').length; }
+  get statsInactive() { return this.users.filter(u => !['active', 'ativo', 'pending', 'pendente'].includes(u.status?.toLowerCase() || '')).length; }
 
   create() {
     if (this.form.invalid) {
@@ -146,5 +163,20 @@ export class UsersComponent {
     if (s === 'active' || s === 'ativo') return 'tag-active';
     if (s === 'pending' || s === 'pendente') return 'tag-pending';
     return 'tag-inactive';
+  }
+
+  getAvatarColor(name: string): string {
+    const colors = [
+      '#4F46E5', // Indigo
+      '#7C3AED', // Purple
+      '#EC4899', // Pink
+      '#EF4444', // Red
+      '#F59E0B', // Amber
+      '#10B981', // Emerald
+      '#06B6D4', // Cyan
+      '#3B82F6', // Blue
+    ];
+    const hash = (name || '').split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return colors[hash % colors.length];
   }
 }
